@@ -7,26 +7,13 @@ class MainApplication(tk.Tk):
 
         self.title("Job Application Tracker")
         self.geometry(f"{self.winfo_screenwidth()}x{self.winfo_screenheight()}")
-
-        # Create a menu bar
-        menubar = tk.Menu(self)
-        
-        # Create a file menu
-        file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="About", command=self.display_info)
-        file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.quit)
-        
-        # Add the file menu to the menu bar
-        menubar.add_cascade(label="File", menu=file_menu)
-        
-        # Configure the menu bar
-        self.config(menu=menubar)
+        self.create_widgets()
 
         #Home page
         self.home_page = tk.Frame(self)
         self.home_page.pack(fill="both", expand=True)
-        self.home_page_label = tk.Label(self.home_page, text="Welcome to the Job Application Tracker", font=("Arial", 30))
+        self.home_page_label = tk.Label(self.home_page, text="Welcome to the Job Application Tracker", font=("Arial", 20))
+        self.home_page_label.pack()
         self.home_page_label.pack()
 
         self.logo = tk.PhotoImage(file="logo.png")
@@ -37,7 +24,24 @@ class MainApplication(tk.Tk):
         self.add_job_button = tk.Button(self.home_page, text="Add Job", command=self.add_job)
         self.add_job_button.pack()
 
+        # Create a menu bar
+        menubar = tk.Menu(self)
 
+        # Configure the menu bar
+        self.config(menu=menubar)
+
+        # Create a file menu
+        file_menu = tk.Menu(menubar, tearoff=0)
+        file_menu.add_command(label="Home", command=self.go_to_home_page)
+        file_menu.add_separator()
+        file_menu.add_command(label="About", command=self.display_info)
+        file_menu.add_separator()
+        file_menu.add_command(label="Exit", command=self.quit)
+
+        # Add the file menu to the menu bar
+        menubar.add_cascade(label="File", menu=file_menu)
+
+    # This is what is displayed when 'About' is clicked
     def display_info(self):
         info = tk.Toplevel(self)
         info.title("About")
@@ -45,6 +49,7 @@ class MainApplication(tk.Tk):
         info_label = tk.Label(info, text="This is a job application tracker.\n It will help you keep track of the jobs you have applied to.\nNo Comments™️")
         info_label.pack()
 
+    # This is the page for the add_job button
     def add_job(self):
         self.home_page.pack_forget()
         self.add_job_page = tk.Frame(self)
@@ -74,6 +79,16 @@ class MainApplication(tk.Tk):
 
         self.add_button = tk.Button(self.add_job_page, text="Add", command=self.add_job_to_list)
         self.add_button.pack()
+
+    # This is the Job Manager title at the top of the window
+    def create_widgets(self):
+        self.label = tk.Label(self, text="Job Manager", font=("Arial", 30))
+        self.label.pack()
+
+    # Navigates to the home page
+    def go_to_home_page(self):
+        self.add_job_page.pack_forget()
+        self.home_page.pack()
 
 if __name__ == "__main__":
     app = MainApplication()
