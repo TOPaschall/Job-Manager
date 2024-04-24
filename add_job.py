@@ -16,7 +16,7 @@ class AddJob(ctk.CTkFrame):
         open_job_applications = []
         # Append text input to a json file
         def add_job_to_list(self):
-            if(self.company_entry.get() == "" or self.job_title_entry.get() == "" or self.status_entry.get() == "" or self.date_applied_entry.get() == ""):
+            if(self.company_entry.get() == "" or self.job_title_entry.get() == "" or self.status_entry.get() == "" or self.date_applied_entry.get_date() == ""):
                 utils.show_error_message()
                 return
             # Create a dictionary to store the job application
@@ -33,7 +33,7 @@ class AddJob(ctk.CTkFrame):
             self.company_entry.delete(0, "end")
             self.job_title_entry.delete(0, "end")
             self.status_entry.delete(0, "end")
-            self.date_applied_entry.delete(0, "end")
+            self.date_applied_entry.selection_clear()
             self.pack_forget()
 
         self.add_job_page = ctk.CTkFrame(self)
