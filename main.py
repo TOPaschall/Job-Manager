@@ -1,6 +1,8 @@
 import tkinter as tk
 import customtkinter as ctk
 import add_job as aj
+import utils
+import PIL.Image as pil
 
 # Create the main application
 class MainApplication(ctk.CTk):
@@ -18,7 +20,9 @@ class MainApplication(ctk.CTk):
         self.home_page_label.pack()
         self.home_page_label.pack()
 
-        self.logo = tk.PhotoImage(file="logo.png")
+        #Logo
+        image = pil.open("logo.png")
+        self.logo = ctk.CTkImage(dark_image=image, light_image=image, size=(200, 200))
         self.logo_label = ctk.CTkLabel(self.home_page, image=self.logo)
         self.logo_label.pack()
 
@@ -38,21 +42,12 @@ class MainApplication(ctk.CTk):
         # Create a file menu
         file_menu = tk.Menu(menubar, tearoff=0)
         file_menu.add_command(label="Home", command=self.go_to_home_page)
-        file_menu.add_separator()
-        file_menu.add_command(label="About", command=self.display_info)
+        file_menu.add_command(label="About", command=utils.display_info)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.quit)
 
         # Add the file menu to the menu bar
         menubar.add_cascade(label="File", menu=file_menu)
-
-    # This is what is displayed when 'About' is clicked
-    def display_info(self):
-        info = ctk.CTkToplevel(self)
-        info.title("About")
-        info.geometry("800x400")
-        info_label = ctk.CTkLabel(info, text="This is a job application tracker.\n It will help you keep track of the jobs you have applied to.\nNo Comments™️")
-        info_label.pack()
 
     # This is the Job Manager title at the top of the window
     def create_widgets(self):

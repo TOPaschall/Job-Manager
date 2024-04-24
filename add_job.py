@@ -1,6 +1,8 @@
 import json
 import tkinter as tk
 import customtkinter as ctk
+import tkcalendar as tkc
+import utils
 
 # This is the page for the add_job button
 
@@ -14,11 +16,14 @@ class AddJob(ctk.CTkFrame):
         open_job_applications = []
         # Append text input to a json file
         def add_job_to_list(self):
+            if(self.company_entry.get() == "" or self.job_title_entry.get() == "" or self.status_entry.get() == "" or self.date_applied_entry.get() == ""):
+                utils.show_error_message()
+                return
             job_application = {
                 "company": self.company_entry.get(),
                 "position": self.job_title_entry.get(),
                 "status": self.status_entry.get(),
-                "date_applied": self.date_applied_entry.get()
+                "date_applied": self.date_applied_entry.get_date()
             }
             open_job_applications.append(job_application)
             with open("job_applications.json", "w") as file:
@@ -44,7 +49,7 @@ class AddJob(ctk.CTkFrame):
 
         self.date_applied_label = ctk.CTkLabel(self.add_job_page, text="Date Applied")
         self.date_applied_label.pack()
-        self.date_applied_entry = ctk.CTkEntry(self.add_job_page)
+        self.date_applied_entry = tkc.Calendar(self.add_job_page)
         self.date_applied_entry.pack()
 
         self.status_label = ctk.CTkLabel(self.add_job_page, text="Status")
