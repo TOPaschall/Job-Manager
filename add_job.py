@@ -19,6 +19,7 @@ class AddJob(ctk.CTkFrame):
             if(self.company_entry.get() == "" or self.job_title_entry.get() == "" or self.status_entry.get() == "" or self.date_applied_entry.get() == ""):
                 utils.show_error_message()
                 return
+            # Create a dictionary to store the job application
             job_application = {
                 "company": self.company_entry.get(),
                 "position": self.job_title_entry.get(),
@@ -26,6 +27,7 @@ class AddJob(ctk.CTkFrame):
                 "date_applied": self.date_applied_entry.get_date()
             }
             open_job_applications.append(job_application)
+            # Write the job applications to a json file
             with open("job_applications.json", "w") as file:
                 json.dump(open_job_applications, file)
             self.company_entry.delete(0, "end")
