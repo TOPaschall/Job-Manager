@@ -52,7 +52,10 @@ class viewJobs(tk.Frame):
             self.status_label = tk.Label(self.job_frame, text=f"Status: {job['status']}")
             self.status_label.pack()
 
-            # Add a remove button to each job frame
+            # Add an edit button to each job frame
+            self.edit_button = tk.Button(self.job_frame, text="Edit Job", command=lambda index=i: self.edit_job(index))
+            self.edit_button.pack()
+
             self.remove_button = tk.Button(self.job_frame, text="Remove", command=lambda index=i: self.remove_job(index))
             self.remove_button.pack()
 
@@ -83,6 +86,56 @@ class viewJobs(tk.Frame):
         # Reload the frame to reflect the changes
         self.reload_frame()
 
+    def edit_job(self, index):
+        # Import job applications from JSON file
+        try:
+            with open('job_applications.json', 'r') as file:
+                job_applications = json.load(file)
+        except json.decoder.JSONDecodeError:
+            job_applications = []
+
+        # Check if the index is valid
+        if index < len(job_applications):
+            # Create a new window for editing the job status
+            self.edit_window = tk.Toplevel(self)
+            self.edit_window.title("Edit Job")
+            self.edit_window.geometry("300x150")
+
+            # Create a label and entry for the new status
+            self.status_label = tk.Label(self.edit_window, text="New Status:")
+            self.status_label.pack()
+
+            self.status_entry = tk.Entry(self.edit_window)
+            self.status_entry.pack()
+
+            # Create a button to save the changes
+            self.save_button = tk.Button(self.edit_window, text="Save", command=lambda: self.save_job(index))
+            self.save_button.pack()
+
+    def save_job(self, index):
+        # Import job applications from JSON file
+        try:
+            with open('job_applications.json', 'r') as file:
+                job_applications = json.load(file)
+        except json.decoder.JSONDecodeError:
+            job_applications = []
+
+        # Check if the index is valid
+        if index < len(job_applications):
+            # Update the status of the selected job
+            new_status = self.status_entry.get()
+            job_applications[index]['status'] = new_status
+
+            # Save the updated job applications to the JSON file
+            with open('job_applications.json', 'w') as file:
+                json.dump(job_applications, file)
+
+            # Close the edit window
+            self.edit_window.destroy()
+
+            # Reload the frame to reflect the changes
+            self.reload_frame()
+
     def reload_frame(self):
         # Clear existing job frames
         for widget in self.scrollable_frame.winfo_children():
@@ -112,6 +165,9 @@ class viewJobs(tk.Frame):
             self.status_label = tk.Label(self.job_frame, text=f"Status: {job['status']}")
             self.status_label.pack()
 
-            # Add a remove button to each job frame
+            # Add an edit button to each job frame
+            self.edit_button = tk.Button(self.job_frame, text="Edit Job", command=lambda index=i: self.edit_job(index))
+            self.edit_button.pack()
+
             self.remove_button = tk.Button(self.job_frame, text="Remove", command=lambda index=i: self.remove_job(index))
             self.remove_button.pack()
