@@ -1,36 +1,33 @@
 import tkinter as tk
-import customtkinter as ctk
+from tkinter import ttk
 import add_job as aj
 import utils
 import PIL.Image as pil
 
 # Create the main application
-class MainApplication(ctk.CTk):
+class MainApplication(tk.Tk):
     def __init__(self):
         super().__init__()
 
         self.title("Job Application Tracker")
         self.geometry(f"{self.winfo_screenwidth()}x{self.winfo_screenheight()}")
-        self.create_widgets()
 
         #Home page
-        self.home_page = ctk.CTkFrame(self)
-        self.home_page.pack(fill="both", expand=True)
-        self.home_page_label = ctk.CTkLabel(self.home_page, text="Welcome to the Job Application Tracker", font=("Arial", 20))
-        self.home_page_label.pack()
+        self.home_page = tk.Frame(self)
+        self.home_page.pack(expand=True)
+        self.home_page_label = tk.Label(self.home_page, text="Welcome to the Job Application Tracker", font=("Arial", 20))
         self.home_page_label.pack()
 
         #Logo
-        image = pil.open("logo.png")
-        self.logo = ctk.CTkImage(dark_image=image, light_image=image, size=(200, 200))
-        self.logo_label = ctk.CTkLabel(self.home_page, image=self.logo)
+        self.logo = tk.PhotoImage(file="logo.png")
+        self.logo_label = tk.Label(self.home_page, image=self.logo)
         self.logo_label.pack()
 
         #Add job page
         self.addJobFrame = aj.AddJob(self.home_page)
 
         #Home page button
-        self.add_job_button = ctk.CTkButton(self.home_page, text="Add Job", command=self.addJobFrame.pack)
+        self.add_job_button = tk.Button(self.home_page, text="Add Job", command=self.addJobFrame.pack)
         self.add_job_button.pack()
 
         # Create a menu bar
@@ -48,11 +45,6 @@ class MainApplication(ctk.CTk):
 
         # Add the file menu to the menu bar
         menubar.add_cascade(label="File", menu=file_menu)
-
-    # This is the Job Manager title at the top of the window
-    def create_widgets(self):
-        self.label = ctk.CTkLabel(self, text="Job Manager", font=("Arial", 30))
-        self.label.pack()
 
     # Navigates to the home page
     def go_to_home_page(self):
