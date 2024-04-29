@@ -1,29 +1,34 @@
 import tkinter as tk
-import customtkinter as ctk
+from tkinter import ttk
+import add_job as aj
+import utils
+import viewJobs as vj
+import homePage as hp
 
 # Create the main application
-class MainApplication(ctk.CTk):
-    def __init__(self):
-        super().__init__()
+class MainApplication(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
 
         self.title("Job Application Tracker")
         self.geometry(f"{self.winfo_screenwidth()}x{self.winfo_screenheight()}")
-        self.create_widgets()
+        self.configure(bg="light blue")
 
-        #Home page
-        self.home_page = ctk.CTkFrame(self)
-        self.home_page.pack(fill="both", expand=True)
-        self.home_page_label = ctk.CTkLabel(self.home_page, text="Welcome to the Job Application Tracker", font=("Arial", 20))
-        self.home_page_label.pack()
-        self.home_page_label.pack()
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
 
-        self.logo = tk.PhotoImage(file="logo.png")
-        self.logo_label = ctk.CTkLabel(self.home_page, image=self.logo)
-        self.logo_label.pack()
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
-        #Home page button
-        self.add_job_button = ctk.CTkButton(self.home_page, text="Add Job", command=self.add_job)
-        self.add_job_button.pack()
+        self.frames = {}
+
+        # Create instances of frames
+        for F in (aj.AddJob, vj.viewJobs, hp.home_page):
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame(hp.home_page)
 
         # Create a menu bar
         menubar = tk.Menu(self)
@@ -33,63 +38,25 @@ class MainApplication(ctk.CTk):
 
         # Create a file menu
         file_menu = tk.Menu(menubar, tearoff=0)
-        file_menu.add_command(label="Home", command=self.go_to_home_page)
-        file_menu.add_separator()
-        file_menu.add_command(label="About", command=self.display_info)
+        file_menu.add_command(label="About", command=utils.display_info)
         file_menu.add_separator()
         file_menu.add_command(label="Exit", command=self.quit)
 
         # Add the file menu to the menu bar
         menubar.add_cascade(label="File", menu=file_menu)
 
-    # This is what is displayed when 'About' is clicked
-    def display_info(self):
-        info = ctk.CTkToplevel(self)
-        info.title("About")
-        info.geometry("800x400")
-        info_label = ctk.CTkLabel(info, text="This is a job application tracker.\n It will help you keep track of the jobs you have applied to.\nNo Comments™️")
-        info_label.pack()
+        # Create a navigation menu
+        nav_menu = tk.Menu(menubar, tearoff=0)
+        nav_menu.add_command(label="Add Job", command=lambda: self.show_frame(aj.AddJob))
+        nav_menu.add_command(label="View Jobs", command=lambda: self.show_frame(vj.viewJobs))
 
-    # This is the page for the add_job button
-    def add_job(self):
-        self.home_page.pack_forget()
-        self.add_job_page = ctk.CTkFrame(self)
-        self.add_job_page.pack(fill="both", expand=True)
-        self.add_job_label = ctk.CTkLabel(self.add_job_page, text="Add a Job", font=("Arial", 30))
-        self.add_job_label.pack()
+        # Add the navigation menu to the menu bar
+        menubar.add_cascade(label="Navigate", menu=nav_menu)
 
-        self.job_title_label = ctk.CTkLabel(self.add_job_page, text="Job Title")
-        self.job_title_label.pack()
-        self.job_title_entry = ctk.CTkEntry(self.add_job_page)
-        self.job_title_entry.pack()
+    def show_frame(self, cont):
+        frame = self.frames[cont]
+        frame.tkraise()
 
-        self.company_label = ctk.CTkLabel(self.add_job_page, text="Company")
-        self.company_label.pack()
-        self.company_entry = ctk.CTkEntry(self.add_job_page)
-        self.company_entry.pack()
-
-        self.date_applied_label = ctk.CTkLabel(self.add_job_page, text="Date Applied")
-        self.date_applied_label.pack()
-        self.date_applied_entry = ctk.CTkEntry(self.add_job_page)
-        self.date_applied_entry.pack()
-
-        self.status_label = ctk.CTKLabel(self.add_job_page, text="Status")
-        self.status_label.pack()
-        self.status_entry = ctk.CTkEntry(self.add_job_page)
-        self.status_entry.pack()
-
-        self.add_button = ctk.CTkButton(self.add_job_page, text="Add", command=self.add_job_to_list)
-        self.add_button.pack()
-
-    # This is the Job Manager title at the top of the window
-    def create_widgets(self):
-        self.label = ctk.CTkLabel(self, text="Job Manager", font=("Arial", 30))
-        self.label.pack()
-
-    # Navigates to the home page
-    def go_to_home_page(self):
-        self.add_job_page.pack_forget()
-        self.home_page.pack()
 
 if __name__ == "__main__":
     app = MainApplication()
